@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#060b18">
+  <meta name="color-scheme" content="dark">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://is.gd https://v.gd; connect-src https://is.gd https://v.gd; img-src 'self' data:; style-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta name="description" content="FreeLink пайванди дарозро кӯтоҳ мекунад. Таърих танҳо дар браузери шумо нигоҳ дошта мешавад.">
+  <title>FreeLink — пайвандҳои кӯтоҳ</title>
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script type="module" src="assets/js/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="a11y.skip">Ба мундариҷа гузаштан</a>
+
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="#top" data-i18n-aria-label="brand.home" aria-label="FreeLink — саҳифаи асосӣ">
+        <svg class="brand__mark" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+          <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f6bff"/><stop offset="1" stop-color="#18d4ff"/></linearGradient></defs>
+          <path d="M26 38l12-12M23 31l-4 4a8 8 0 0011 11l4-4M41 33l4-4a8 8 0 00-11-11l-4 4" fill="none" stroke="url(#bg)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="brand__name">FreeLink</span>
+      </a>
+
+      <nav class="nav" id="nav" aria-label="Гузариши асосӣ" data-i18n-aria-label="a11y.nav">
+        <a href="#create" data-i18n="nav.create">Сохтан</a>
+        <a href="#history" data-i18n="nav.history">Таърих</a>
+        <a href="#privacy" data-i18n="nav.privacy">Махфият</a>
+      </nav>
+
+      <div class="topbar__tools">
+        <label class="visually-hidden" for="lang-select" data-i18n="a11y.language">Забон</label>
+        <select id="lang-select" class="select select--compact"></select>
+        <button class="icon-btn nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav" data-i18n-aria-label="a11y.menu" aria-label="Кушодани меню">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="container hero__inner">
+        <h1 class="hero__title" data-i18n="hero.title">Пайвандҳои дарозро кӯтоҳ кунед</h1>
+        <p class="hero__desc" data-i18n="hero.desc">Пайванди дарозро гузоред, пайванди кӯтоҳ гиред ва онро ба осонӣ мубодила кунед. Бе сабти ном.</p>
+
+        <form class="card form" id="shorten-form" novalidate>
+          <div class="field">
+            <label for="url-input" data-i18n="form.urlLabel">Пайванди дароз</label>
+            <input class="input" id="url-input" name="url" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" data-i18n-placeholder="form.urlPlaceholder" placeholder="https://example.com/саҳифа" aria-describedby="url-error">
+            <p class="field__error" id="url-error" role="alert" hidden></p>
+          </div>
+
+          <div class="form__row">
+            <div class="field">
+              <label for="alias-input" data-i18n="form.aliasLabel">Номи дилхоҳ (ихтиёрӣ)</label>
+              <input class="input" id="alias-input" name="alias" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="30" data-i18n-placeholder="form.aliasPlaceholder" placeholder="масалан: my_link" aria-describedby="alias-hint alias-error">
+              <p class="field__hint" id="alias-hint" data-i18n="form.aliasHint"></p>
+              <p class="field__error" id="alias-error" role="alert" hidden></p>
+            </div>
+            <div class="field">
+              <label for="provider-select" data-i18n="form.provider">Хидмат</label>
+              <select class="select" id="provider-select"></select>
+            </div>
+          </div>
+
+          <button class="btn btn--primary" id="submit-btn" type="submit">
+            <span class="spinner" aria-hidden="true" hidden></span>
+            <span id="submit-label" data-i18n="form.submit">Сохтани пайванди кӯтоҳ</span>
+          </button>
+
+          <div class="alert" id="form-alert" role="alert" hidden>
+            <p id="form-alert-text"></p>
+            <button class="btn btn--ghost" id="retry-btn" type="button" data-i18n="err.retry">Бори дигар кӯшиш кардан</button>
+          </div>
+        </form>
+
+        <section class="card result" id="result" aria-labelledby="result-title" hidden>
+          <h2 class="card__title" id="result-title" data-i18n="result.title">Пайванди кӯтоҳи шумо</h2>
+          <input class="input input--result" id="result-url" type="text" readonly aria-labelledby="result-title" dir="ltr">
+          <div class="actions">
+            <button class="btn btn--primary" id="copy-btn" type="button" data-i18n="result.copy">Нусха гирифтан</button>
+            <a class="btn btn--secondary" id="open-btn" href="#" target="_blank" rel="noopener noreferrer" data-i18n="result.open">Кушодан</a>
+            <button class="btn btn--secondary" id="share-btn" type="button" data-i18n="result.share" hidden>Мубодила</button>
+          </div>
+          <p class="meta"><span data-i18n="result.original">Пайванди асл</span>: <span class="meta__url" id="result-original" dir="ltr"></span></p>
+          <p class="meta" data-i18n="result.external">Пайванд ба сайти беруна мебарад.</p>
+        </section>
+      </div>
+    </section>
+
+    <section class="section" id="history" aria-labelledby="history-title">
+      <div class="container">
+        <div class="section__head">
+          <h2 id="history-title" data-i18n="history.title">Таърихи пайвандҳо</h2>
+          <button class="btn btn--danger" id="clear-btn" type="button" data-i18n="history.clear" hidden>Тоза кардани таърих</button>
+        </div>
+        <p class="note" data-i18n="history.localNote"></p>
+
+        <div class="toolbar" id="history-toolbar" hidden>
+          <div class="field">
+            <label class="visually-hidden" for="search-input" data-i18n="history.search">Ҷустуҷӯ дар таърих</label>
+            <input class="input" id="search-input" type="search" autocomplete="off" data-i18n-placeholder="history.search" placeholder="Ҷустуҷӯ дар таърих">
+          </div>
+          <div class="field">
+            <label class="visually-hidden" for="sort-select" data-i18n="history.sort">Тартиб</label>
+            <select class="select" id="sort-select">
+              <option value="newest" data-i18n="history.newest">Аввал нав</option>
+              <option value="oldest" data-i18n="history.oldest">Аввал кӯҳна</option>
+            </select>
+          </div>
+        </div>
+
+        <ul class="history" id="history-list"></ul>
+        <p class="empty" id="history-empty" data-i18n="history.empty">Ҳанӯз пайванде нест. Аввалин пайванди кӯтоҳро созед.</p>
+      </div>
+    </section>
+
+    <section class="section" id="privacy" aria-labelledby="privacy-title">
+      <div class="container prose">
+        <h2 id="privacy-title" data-i18n="privacy.title">Истифода ва махфият</h2>
+        <p data-i18n="privacy.p1"></p>
+        <p data-i18n="privacy.p2"></p>
+        <p data-i18n="privacy.p3"></p>
+        <p><span data-i18n="privacy.p4"></span><a href="https://is.gd/terms.php" target="_blank" rel="noopener noreferrer" data-i18n="privacy.terms">шартҳои is.gd</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container"><p data-i18n="footer.text">FreeLink — лоиҳаи кушода.</p></div>
+  </footer>
+
+  <dialog class="dialog" id="confirm-dialog" aria-labelledby="confirm-title">
+    <div class="dialog__body">
+      <h2 id="confirm-title" data-i18n="confirm.clearTitle">Таърих тоза шавад?</h2>
+      <p data-i18n="confirm.clearText"></p>
+      <div class="actions">
+        <button class="btn btn--secondary" id="confirm-cancel" type="button" data-i18n="confirm.cancel">Бекор кардан</button>
+        <button class="btn btn--danger-solid" id="confirm-ok" type="button" data-i18n="confirm.confirm">Тоза кардан</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toasts" id="toasts" role="status" aria-live="polite" aria-atomic="false" data-i18n-aria-label="a11y.toasts"></div>
+  <noscript><p class="noscript">FreeLink needs JavaScript.</p></noscript>
+</body>
+</html>
